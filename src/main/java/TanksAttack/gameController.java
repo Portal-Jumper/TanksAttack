@@ -1,7 +1,6 @@
 package TanksAttack;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -23,7 +22,7 @@ public class gameController {
     private BooleanProperty dPressed = new SimpleBooleanProperty();
     private BooleanProperty lPressed = new SimpleBooleanProperty();
     private BooleanProperty shotOnce = new SimpleBooleanProperty(true);
-    private BooleanProperty timer = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty timer = new SimpleBooleanProperty(true);
 
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed);
 
@@ -33,7 +32,7 @@ public class gameController {
     private ImageView tank;
 
     @FXML
-    private ImageView metal1, metal2, metal3, metal4, metal5, metal6, water1, water2, water3, water4, water5, water6,
+    private ImageView image1, image2, metal3, metal4, metal5, metal6, water1, water2, water3, water4, water5, water6,
             water7, water8, water9, water10, water11, water12, brick1, brick2, brick3, brick4, brick5, brick6, brick7
             , brick8, brick9, brick10;
 
@@ -42,15 +41,20 @@ public class gameController {
     private AnchorPane scene;
 
     ArrayList<ImageView> blocks = new ArrayList<>();
+    ArrayList<ImageView> bricks = new ArrayList<>();
     ArrayList<ImageView> bullets = new ArrayList<>();
 
     private TranslateTransition transition;
 
-    Image image = new Image("TanksAttack/Brick.png");
+    Image brickImage = new Image("TanksAttack/Brick.png");
+    Image waterImage = new Image("TanksAttack/Water.png");
+    Image metalImage = new Image("TanksAttack/Metal_Plate.png");
+
 
 
     public void initialize() {
         addBlocks();
+        addBricks();
         movementSetup();
         shotCooldown.start();
         keyPressed.addListener(((observableValue, aBoolean, t1) -> {
@@ -60,7 +64,8 @@ public class gameController {
                 Atimer.stop();
             }
         }));
-        collisionTimer.start();
+        collisionBlockTimer.start();
+        collisionBrickTimer.start();
     }
 
     private AnimationTimer Atimer = new AnimationTimer() {
@@ -111,10 +116,10 @@ public class gameController {
 
     Thread shotCooldown = new Thread(() -> {
         while(true) {
-            System.out.println("aaa");
+//            System.out.println("aaa");
             if (!timer.get()) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(700);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -179,15 +184,33 @@ public class gameController {
         return false;
     }
 
-    private AnimationTimer collisionTimer = new AnimationTimer() {
+    private AnimationTimer collisionBlockTimer = new AnimationTimer() {
         @Override
         public void handle(long l) {
             for (ImageView imageView : bullets) {
                 for (ImageView imageView1 : blocks) {
                     if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
+                        if(!bricks.contains(imageView1)) {
+                            scene.getChildren().remove(imageView);
+                            bullets.remove(imageView);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
+    private AnimationTimer collisionBrickTimer = new AnimationTimer() {
+        @Override
+        public void handle(long l) {
+            for (ImageView imageView : bullets) {
+                for (ImageView imageView1 : bricks) {
+                    if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
                         scene.getChildren().remove(imageView1);
                         scene.getChildren().remove(imageView);
                         blocks.remove(imageView1);
+                        bricks.remove(imageView1);
                         bullets.remove(imageView);
                         return;
                     }
@@ -252,9 +275,21 @@ public class gameController {
     }
 
 
+    private void addBricks() {
+        bricks.add(brick1);
+        bricks.add(brick2);
+        bricks.add(brick3);
+        bricks.add(brick4);
+        bricks.add(brick5);
+        bricks.add(brick6);
+        bricks.add(brick7);
+        bricks.add(brick8);
+        bricks.add(brick9);
+        bricks.add(brick10);
+    }
 
     private void addBlocks() {
-        addToBlocks(metal1, metal2, metal3, metal4, metal5, metal6, water1, water2, water3);
+        addToBlocks(image1, image2, metal3, metal4, metal5, metal6, water1, water2, water3);
         addToBlocks(water4, water5, water6, water7, water8, water9, water10, water11, water12);
         addToBlocks(brick1, brick2, brick3, brick4, brick5, brick6, brick7, brick8, brick9);
         blocks.add(brick10);

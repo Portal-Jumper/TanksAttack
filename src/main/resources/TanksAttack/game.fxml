@@ -13,12 +13,12 @@
             <Image url="@tank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="metal1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="image1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="metal2" fitHeight="50.0" fitWidth="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="image2" fitHeight="50.0" fitWidth="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Metal_Plate.png" />
          </image>
