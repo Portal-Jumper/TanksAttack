@@ -5,7 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 import java.io.IOException;
 
@@ -22,7 +25,8 @@ public class App extends Application {
         this.stage = stage;
         Image image = new Image("TanksAttack/Icon.png");
         stage.getIcons().add(image);
-        stage.setTitle("Tank Attack");
+        stage.setTitle("Tanks Attack");
+        stage.setResizable(false);
         scene = new Scene(loadFXML("welcomeScreen"));
         stage.setScene(scene);
         stage.show();
@@ -38,8 +42,8 @@ public class App extends Application {
     }
 
     static void resize() {
-        stage.setHeight(400);
-        stage.setWidth(600);
+        stage.setHeight(637);
+        stage.setWidth(1014);
     }
 
     public static void main(String[] args) {
