@@ -45,7 +45,7 @@ public class randomMapController {
             image157, image158, image159, image160, image161, image162, image163, image164, image165, image166,
             image167, image168, image169, image170, image171, image172, image173, image174, image175, image176,
             image177, image178, image179, image180, image181, image182, image183, image184, image185, image186,
-            image187, image188, image189, image190, metal1, metal2, metal3, metal4, metal5, metal6;
+            image187, image188, image189, image190, image191, metal1, metal2, metal3, metal4, metal5, metal6;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
@@ -67,8 +67,8 @@ public class randomMapController {
     private ArrayList<ImageView> bullets = new ArrayList<>();
     private ArrayList<ImageView> enemyTanks = new ArrayList<>();
 
-    private double movementVariable = 1;
-    private double enemyMovementVariable = 1.5;
+    private double movementVariable = 1.5;
+    private double enemyMovementVariable = 0.5;
 
     private TranslateTransition transition;
 
@@ -80,28 +80,8 @@ public class randomMapController {
     private volatile int tankRandomInt4 = 0;
     private volatile int tankRandomInt5 = 0;
 
-    private double enemyTankX1;
-    private double enemyTankY1;
-    private double enemyTankX2;
-    private double enemyTankY2;
-    private double enemyTankX3;
-    private double enemyTankY3;
-    private double enemyTankX4;
-    private double enemyTankY4;
-    private double enemyTankX5;
-    private double enemyTankY5;
 
     public void initialize() {
-        enemyTankX1 = enemyTank1.getLayoutX();
-        enemyTankY1 = enemyTank1.getLayoutY();
-        enemyTankX2 = enemyTank2.getLayoutX();
-        enemyTankY2 = enemyTank2.getLayoutY();
-        enemyTankX3 = enemyTank3.getLayoutX();
-        enemyTankY3 = enemyTank3.getLayoutY();
-        enemyTankX4 = enemyTank4.getLayoutX();
-        enemyTankY4 = enemyTank4.getLayoutY();
-        enemyTankX5 = enemyTank5.getLayoutX();
-        enemyTankY5 = enemyTank5.getLayoutY();
 
         generateMap();
         movementSetup();
@@ -250,11 +230,13 @@ public class randomMapController {
         }
     };
 
+    String waterUrl = "file:/C:/Users/PortalJumper/IdeaProjects/TanksAttack/target/classes/TanksAttack/Water.png";
+
     private void checkBlockBulletCollision() {
         for (ImageView imageView : bullets) {
             for (ImageView imageView1 : blocks) {
                 if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
-                    if (!bricks.contains(imageView1)) {
+                    if (!bricks.contains(imageView1) && !imageView1.getImage().getUrl().equals(waterUrl)) {
                         scene.getChildren().remove(imageView);
                         bullets.remove(imageView);
                     } else if (bricks.contains(imageView1)) {
@@ -272,40 +254,40 @@ public class randomMapController {
 
     private void checkTankBulletCollision() {
         for (ImageView imageView : bullets) {
-            int counter = 1;
             for (ImageView imageView1 : enemyTanks) {
-                System.out.println(counter);
+                int counter = 1;
                 if (imageView.getBoundsInParent().intersects((imageView1.getBoundsInParent()))) {
-                    if(counter == 1){
-                        imageView1.setLayoutX(enemyTankX1);
-                        imageView1.setLayoutY(enemyTankY1);
+                    System.out.println("aaa");
+                    imageView1.setLayoutX(randomX());
+                    imageView1.setLayoutY(randomY());
+                    while (checkEnemyCollision(imageView1)) {
+                        System.out.println("bbb" + counter);
+                        imageView1.setLayoutX(randomX());
+                        imageView1.setLayoutY(randomY());
+                        counter++;
                     }
-                    if(counter == 2){
-                        imageView1.setLayoutX(enemyTankX2);
-                        imageView1.setLayoutY(enemyTankY2);
-                    }
-                    if(counter == 3){
-                        imageView1.setLayoutX(enemyTankX3);
-                        imageView1.setLayoutY(enemyTankY3);
-                    }
-                    if(counter == 4){
-                        imageView1.setLayoutX(enemyTankX4);
-                        imageView1.setLayoutY(enemyTankY4);
-                    }
-                    if(counter == 5){
-                        imageView1.setLayoutX(enemyTankX5);
-                        imageView1.setLayoutY(enemyTankY5);
-                    }
-
                     scene.getChildren().remove(imageView);
                     bullets.remove(imageView);
                     PlayerData.points += 100;
                     pointsLabel.setText("Points:" + PlayerData.points);
                     return;
                 }
-                counter++;
             }
         }
+    }
+
+    private int randomX() {
+        int rand = random.nextInt(951);
+        if (!(rand % 50 == 0))
+            rand = random.nextInt(951);
+        return rand;
+    }
+
+    private int randomY() {
+        int rand = random.nextInt(551);
+        if (!(rand % 50 == 0))
+            rand = random.nextInt(551);
+        return rand;
     }
 
     private ImageView createBullet() {
@@ -402,11 +384,18 @@ public class randomMapController {
             if (enemyTank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
                 return true;
         }
-        ArrayList<ImageView> temp = new ArrayList<>();
-        temp.addAll(enemyTanks);
+        if (enemyTank.getLayoutY() <= 0)
+            return true;
+        if (enemyTank.getLayoutY() + enemyTank.getFitHeight() >= scene.getPrefHeight())
+            return true;
+        if (enemyTank.getLayoutX() + enemyTank.getLayoutX() <= 0)
+            return true;
+        if (enemyTank.getLayoutX() + enemyTank.getFitWidth() > scene.getPrefWidth())
+            return true;
+        ArrayList<ImageView> temp = new ArrayList<>(enemyTanks);
         temp.remove(enemyTank);
-        for (ImageView imageView : temp) {
-            if (enemyTank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
+        for (ImageView imageView1 : temp) {
+            if (enemyTank.getBoundsInParent().intersects(imageView1.getBoundsInParent()))
                 return true;
         }
         return enemyTank.getBoundsInParent().intersects(tank.getBoundsInParent());
@@ -530,6 +519,7 @@ public class randomMapController {
         addToUnassignedBlocks(image181, image182, image183,
                 image184, image185,
                 image186, image187, image188, image189, image190);
+        unassignedBlocks.add(image191);
     }
 
 
