@@ -16,7 +16,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class gameController {
+public class randomMapController {
 
     @FXML
     private AnchorPane scene;
@@ -53,13 +53,13 @@ public class gameController {
     private BooleanProperty dPressed = new SimpleBooleanProperty();
     private BooleanProperty lPressed = new SimpleBooleanProperty();
     private BooleanProperty shotOnce = new SimpleBooleanProperty(true);
-    private volatile BooleanProperty timer = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty playerTimer = new SimpleBooleanProperty(true);
 
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed);
 
-    Image brickImage = new Image("TanksAttack/Brick.png");
-    Image waterImage = new Image("TanksAttack/Water.png");
-    Image metalImage = new Image("TanksAttack/Metal_Plate.png");
+    private Image brickImage = new Image("TanksAttack/Brick.png");
+    private Image waterImage = new Image("TanksAttack/Water.png");
+    private Image metalImage = new Image("TanksAttack/Metal_Plate.png");
 
     private ArrayList<ImageView> unassignedBlocks = new ArrayList<>();
     private ArrayList<ImageView> blocks = new ArrayList<>();
@@ -68,12 +68,41 @@ public class gameController {
     private ArrayList<ImageView> enemyTanks = new ArrayList<>();
 
     private double movementVariable = 1;
+    private double enemyMovementVariable = 1.5;
 
     private TranslateTransition transition;
 
     private Random random = new Random();
 
+    private volatile int tankRandomInt1 = 0;
+    private volatile int tankRandomInt2 = 0;
+    private volatile int tankRandomInt3 = 0;
+    private volatile int tankRandomInt4 = 0;
+    private volatile int tankRandomInt5 = 0;
+
+    private double enemyTankX1;
+    private double enemyTankY1;
+    private double enemyTankX2;
+    private double enemyTankY2;
+    private double enemyTankX3;
+    private double enemyTankY3;
+    private double enemyTankX4;
+    private double enemyTankY4;
+    private double enemyTankX5;
+    private double enemyTankY5;
+
     public void initialize() {
+        enemyTankX1 = enemyTank1.getLayoutX();
+        enemyTankY1 = enemyTank1.getLayoutY();
+        enemyTankX2 = enemyTank2.getLayoutX();
+        enemyTankY2 = enemyTank2.getLayoutY();
+        enemyTankX3 = enemyTank3.getLayoutX();
+        enemyTankY3 = enemyTank3.getLayoutY();
+        enemyTankX4 = enemyTank4.getLayoutX();
+        enemyTankY4 = enemyTank4.getLayoutY();
+        enemyTankX5 = enemyTank5.getLayoutX();
+        enemyTankY5 = enemyTank5.getLayoutY();
+
         generateMap();
         movementSetup();
 
@@ -85,8 +114,10 @@ public class gameController {
             }
         }));
 
+        tankTimer.start();
         collisionTimer.start();
         shotCooldown.start();
+        enemyMoveTimer.start();
     }
 
 //    Player Movement && Shooting
@@ -175,13 +206,13 @@ public class gameController {
                 }
             }
 
-            if (lPressed.get() && shotOnce.get() && timer.get()) {
+            if (lPressed.get() && shotOnce.get() && playerTimer.get()) {
                 ImageView img = createBullet();
                 scene.getChildren().add(img);
                 bullets.add(img);
                 transition.play();
                 shotOnce.set(false);
-                timer.set(false);
+                playerTimer.set(false);
             }
         }
     };
@@ -200,13 +231,13 @@ public class gameController {
 
     private Thread shotCooldown = new Thread(() -> {
         while (true) {
-            if (!timer.get()) {
+            if (!playerTimer.get()) {
                 try {
-                    Thread.sleep(700);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                timer.set(true);
+                playerTimer.set(true);
             }
         }
     });
@@ -241,16 +272,38 @@ public class gameController {
 
     private void checkTankBulletCollision() {
         for (ImageView imageView : bullets) {
+            int counter = 1;
             for (ImageView imageView1 : enemyTanks) {
+                System.out.println(counter);
                 if (imageView.getBoundsInParent().intersects((imageView1.getBoundsInParent()))) {
+                    if(counter == 1){
+                        imageView1.setLayoutX(enemyTankX1);
+                        imageView1.setLayoutY(enemyTankY1);
+                    }
+                    if(counter == 2){
+                        imageView1.setLayoutX(enemyTankX2);
+                        imageView1.setLayoutY(enemyTankY2);
+                    }
+                    if(counter == 3){
+                        imageView1.setLayoutX(enemyTankX3);
+                        imageView1.setLayoutY(enemyTankY3);
+                    }
+                    if(counter == 4){
+                        imageView1.setLayoutX(enemyTankX4);
+                        imageView1.setLayoutY(enemyTankY4);
+                    }
+                    if(counter == 5){
+                        imageView1.setLayoutX(enemyTankX5);
+                        imageView1.setLayoutY(enemyTankY5);
+                    }
+
                     scene.getChildren().remove(imageView);
                     bullets.remove(imageView);
-                    scene.getChildren().remove(imageView1);
-                    enemyTanks.remove(imageView1);
                     PlayerData.points += 100;
                     pointsLabel.setText("Points:" + PlayerData.points);
                     return;
                 }
+                counter++;
             }
         }
     }
@@ -312,11 +365,101 @@ public class gameController {
 
 //    Enemy Tanks Movement && Shooting
 
+    private AnimationTimer tankTimer = new AnimationTimer() {
+        @Override
+        public void handle(long l) {
+            int counter = 1;
+            for (ImageView tank : enemyTanks) {
+                if (counter == 1)
+                    enemyTankMove(tankRandomInt1, tank);
+                if (counter == 2)
+                    enemyTankMove(tankRandomInt2, tank);
+                if (counter == 3)
+                    enemyTankMove(tankRandomInt3, tank);
+                if (counter == 4)
+                    enemyTankMove(tankRandomInt4, tank);
+                if (counter == 5)
+                    enemyTankMove(tankRandomInt5, tank);
+                counter++;
+
+                if (checkEnemyCollision(tank)) {
+                    tank.setLayoutY(tank.getLayoutY() + enemyMovementVariable);
+                    if (checkEnemyCollision(tank))
+                        tank.setLayoutY(tank.getLayoutY() - (enemyMovementVariable * 2));
+                    if (checkEnemyCollision(tank)) {
+                        tank.setLayoutY(tank.getLayoutY() + enemyMovementVariable);
+                        tank.setLayoutX(tank.getLayoutX() + enemyMovementVariable);
+                    }
+                    if (checkEnemyCollision(tank))
+                        tank.setLayoutX(tank.getLayoutX() - (enemyMovementVariable * 2));
+                }
+            }
+        }
+    };
+
+    private boolean checkEnemyCollision(ImageView enemyTank) {
+        for (ImageView imageView : blocks) {
+            if (enemyTank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
+                return true;
+        }
+        ArrayList<ImageView> temp = new ArrayList<>();
+        temp.addAll(enemyTanks);
+        temp.remove(enemyTank);
+        for (ImageView imageView : temp) {
+            if (enemyTank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
+                return true;
+        }
+        return enemyTank.getBoundsInParent().intersects(tank.getBoundsInParent());
+    }
+
+    private void enemyTankMove(int tankRandomInt, ImageView tank) {
+        if (!checkEnemyCollision(tank)) {
+            if (tankRandomInt == 0) {
+                tank.setLayoutY(tank.getLayoutY() - enemyMovementVariable);
+                tank.setRotate(0);
+            }
+            if (tankRandomInt == 1) {
+                tank.setLayoutY(tank.getLayoutY() + enemyMovementVariable);
+                tank.setRotate(90);
+            }
+            if (tankRandomInt == 2) {
+                tank.setLayoutX(tank.getLayoutX() - enemyMovementVariable);
+                tank.setRotate(180);
+            }
+            if (tankRandomInt == 3) {
+                tank.setLayoutX(tank.getLayoutX() + enemyMovementVariable);
+                tank.setRotate(270);
+            }
+        }
+    }
+
+    private Thread enemyMoveTimer = new Thread(() -> {
+        while (true) {
+            tankRandomInt1 = random.nextInt(4);
+            tankRandomInt2 = random.nextInt(4);
+            tankRandomInt3 = random.nextInt(4);
+            tankRandomInt4 = random.nextInt(4);
+            tankRandomInt5 = random.nextInt(4);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+
 //    Random Map Generation
 
     private void generateMap() {
         fillEnemyTanks();
         fillUnassignedBlocks();
+        blocks.add(metal1);
+        blocks.add(metal2);
+        blocks.add(metal3);
+        blocks.add(metal4);
+        blocks.add(metal5);
+        blocks.add(metal6);
         for (ImageView img : unassignedBlocks) {
             int rand = random.nextInt(3);
             if (rand == 0) {
@@ -387,12 +530,6 @@ public class gameController {
         addToUnassignedBlocks(image181, image182, image183,
                 image184, image185,
                 image186, image187, image188, image189, image190);
-        unassignedBlocks.add(metal1);
-        unassignedBlocks.add(metal2);
-        unassignedBlocks.add(metal3);
-        unassignedBlocks.add(metal4);
-        unassignedBlocks.add(metal5);
-        unassignedBlocks.add(metal6);
     }
 
 

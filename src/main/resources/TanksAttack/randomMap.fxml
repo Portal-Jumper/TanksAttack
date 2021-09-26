@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="scene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #dbd3ba;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TanksAttack.gameController">
+<AnchorPane fx:id="scene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #dbd3ba;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TanksAttack.randomMapController">
     <children>
       <Button layoutX="14.0" layoutY="-40.0" mnemonicParsing="false" text="Button" />
       <ImageView fx:id="tank" fitHeight="48.0" fitWidth="48.0" layoutX="500.0" layoutY="450.0" pickOnBounds="true" preserveRatio="true">
@@ -376,7 +376,7 @@
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank1" fitHeight="48.0" fitWidth="48.0" layoutX="300.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank1" fitHeight="48.0" fitWidth="48.0" layoutX="300.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
@@ -386,7 +386,7 @@
             <Image url="@enemyTank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank3" fitHeight="48.0" fitWidth="48.0" layoutX="500.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank3" fitHeight="48.0" fitWidth="48.0" layoutX="500.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
@@ -396,7 +396,7 @@
             <Image url="@enemyTank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank5" fitHeight="48.0" fitWidth="48.0" layoutX="700.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank5" fitHeight="48.0" fitWidth="48.0" layoutX="700.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>

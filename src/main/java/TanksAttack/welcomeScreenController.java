@@ -7,7 +7,7 @@ public class welcomeScreenController {
 
     @FXML
     private void switchToSecondary() throws IOException {
-        App.setRoot("game");
+        App.setRoot("randomMap");
         App.resize();
     }
 }
