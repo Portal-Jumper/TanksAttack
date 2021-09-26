@@ -6,6 +6,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,9 @@ public class gameController {
 
     @FXML
     private AnchorPane scene;
+
+    @FXML
+    private Label pointsLabel;
 
     @FXML
     private ImageView tank, enemyTank1, enemyTank2, enemyTank3, enemyTank4, enemyTank5;
@@ -35,7 +39,13 @@ public class gameController {
             image96, image97, image98, image99, image100, image101, image102, image103, image104, image105, image106,
             image107, image108, image109, image110, image111, image112, image113, image114, image115, image116,
             image117, image118, image119, image120, image121, image122, image123, image124, image125, image126,
-            image127, image128, image129, image130,metal1,metal2,metal3,metal4,metal5,metal6;
+            image127, image128, image129, image130, image131, image132, image133, image134, image135, image136,
+            image137, image138, image139, image140, image141, image142, image143, image144, image145, image146,
+            image147, image148, image149, image150, image151, image152, image153, image154, image155, image156,
+            image157, image158, image159, image160, image161, image162, image163, image164, image165, image166,
+            image167, image168, image169, image170, image171, image172, image173, image174, image175, image176,
+            image177, image178, image179, image180, image181, image182, image183, image184, image185, image186,
+            image187, image188, image189, image190, metal1, metal2, metal3, metal4, metal5, metal6;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
@@ -78,6 +88,8 @@ public class gameController {
         collisionTimer.start();
         shotCooldown.start();
     }
+
+//    Player Movement && Shooting
 
     private void movementSetup() {
         scene.setOnKeyPressed(e -> {
@@ -137,7 +149,8 @@ public class gameController {
                 }
             }
 
-            if (sPressed.get() && !checkPlayerCollision() && tank.getLayoutY() + tank.getFitHeight() < scene.getPrefHeight()) {
+            if (sPressed.get() && !checkPlayerCollision() &&
+                    tank.getLayoutY() + tank.getFitHeight() < scene.getPrefHeight()) {
                 tank.setLayoutY(tank.getLayoutY() + movementVariable);
                 tank.setRotate(180);
                 if (checkPlayerCollision()) {
@@ -153,7 +166,8 @@ public class gameController {
                 }
             }
 
-            if (dPressed.get() && !checkPlayerCollision() && tank.getLayoutX() + tank.getFitWidth() < scene.getPrefWidth()) {
+            if (dPressed.get() && !checkPlayerCollision() &&
+                    tank.getLayoutX() + tank.getFitWidth() < scene.getPrefWidth()) {
                 tank.setLayoutX(tank.getLayoutX() + movementVariable);
                 tank.setRotate(90);
                 if (checkPlayerCollision()) {
@@ -178,7 +192,7 @@ public class gameController {
                 return true;
         }
         for (ImageView imageView : enemyTanks) {
-            if(tank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
+            if (tank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
                 return true;
         }
         return false;
@@ -212,7 +226,7 @@ public class gameController {
                     if (!bricks.contains(imageView1)) {
                         scene.getChildren().remove(imageView);
                         bullets.remove(imageView);
-                    } else if (bricks.contains(imageView1)){
+                    } else if (bricks.contains(imageView1)) {
                         scene.getChildren().remove(imageView1);
                         scene.getChildren().remove(imageView);
                         blocks.remove(imageView1);
@@ -228,11 +242,13 @@ public class gameController {
     private void checkTankBulletCollision() {
         for (ImageView imageView : bullets) {
             for (ImageView imageView1 : enemyTanks) {
-                if(imageView.getBoundsInParent().intersects((imageView1.getBoundsInParent()))){
+                if (imageView.getBoundsInParent().intersects((imageView1.getBoundsInParent()))) {
                     scene.getChildren().remove(imageView);
                     bullets.remove(imageView);
                     scene.getChildren().remove(imageView1);
                     enemyTanks.remove(imageView1);
+                    PlayerData.points += 100;
+                    pointsLabel.setText("Points:" + PlayerData.points);
                     return;
                 }
             }
@@ -294,12 +310,15 @@ public class gameController {
         return img;
     }
 
+//    Enemy Tanks Movement && Shooting
+
+//    Random Map Generation
+
     private void generateMap() {
         fillEnemyTanks();
         fillUnassignedBlocks();
-        for (int i = 0; i < 128; i++) {
+        for (ImageView img : unassignedBlocks) {
             int rand = random.nextInt(3);
-            ImageView img = unassignedBlocks.get(i);
             if (rand == 0) {
                 int rand2 = random.nextInt(3);
                 if (rand2 == 2) {
@@ -326,7 +345,7 @@ public class gameController {
         }
     }
 
-    private void fillEnemyTanks(){
+    private void fillEnemyTanks() {
         enemyTanks.add(enemyTank1);
         enemyTanks.add(enemyTank2);
         enemyTanks.add(enemyTank3);
@@ -352,6 +371,22 @@ public class gameController {
                 image119, image120);
         addToUnassignedBlocks(image121, image122, image123, image124, image125, image126, image127, image128,
                 image129, image130);
+        addToUnassignedBlocks(image131, image132, image133, image134, image135, image136,
+                image137,
+                image138, image139, image140);
+        addToUnassignedBlocks(image141, image142, image143, image144, image145, image146, image147,
+                image148, image149,
+                image150);
+        addToUnassignedBlocks(image151, image152, image153, image154, image155, image156, image157, image158, image159,
+                image160);
+        addToUnassignedBlocks(image161,
+                image162, image163, image164, image165, image166, image167, image168, image169, image170);
+        addToUnassignedBlocks(image171,
+                image172, image173,
+                image174, image175, image176, image177, image178, image179, image180);
+        addToUnassignedBlocks(image181, image182, image183,
+                image184, image185,
+                image186, image187, image188, image189, image190);
         unassignedBlocks.add(metal1);
         unassignedBlocks.add(metal2);
         unassignedBlocks.add(metal3);
