@@ -27,9 +27,10 @@ public class App extends Application {
         stage.getIcons().add(image);
         stage.setTitle("Tanks Attack");
         stage.setResizable(false);
-        scene = new Scene(loadFXML("welcomeScreen"));
+        scene = new Scene(loadFXML("login"));
         stage.setScene(scene);
         stage.show();
+
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -41,9 +42,14 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
-    static void resize() {
+    static void resizeBig() {
         stage.setHeight(637);
         stage.setWidth(1014);
+    }
+
+    static void resizeSmall() {
+        stage.setHeight(437);
+        stage.setWidth(614);
     }
 
     public static void main(String[] args) {

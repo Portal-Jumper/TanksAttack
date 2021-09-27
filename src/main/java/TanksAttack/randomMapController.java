@@ -80,9 +80,9 @@ public class randomMapController {
     private ArrayList<ImageView> enemyBullets = new ArrayList<>();
     private ArrayList<ImageView> enemyTanks = new ArrayList<>();
 
-    private double movementVariable = 1.9;
-    private double enemyMovementVariable = 1.9;
-    private int enemyShootCooldown = 1000;
+    private double movementVariable = GameData.movementVariable;
+    private double enemyMovementVariable = GameData.enemyMovementVariable;
+    private int enemyShootCooldown = GameData.enemyShootCooldown;
 
     private TranslateTransition transition;
 
@@ -260,7 +260,8 @@ public class randomMapController {
             }
             if(!gameOn.get() && xPressed.get()) {
                 try {
-                    App.setRoot("welcomeScreen");
+                    App.setRoot("levelSelection");
+                    App.resizeSmall();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
