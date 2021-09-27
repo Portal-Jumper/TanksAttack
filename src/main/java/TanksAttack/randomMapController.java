@@ -6,13 +6,18 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,10 +27,13 @@ public class randomMapController {
     private AnchorPane scene;
 
     @FXML
-    private Label pointsLabel;
+    private Label allPointsLabel,runPointsLabel;
 
     @FXML
     private ImageView tank, enemyTank1, enemyTank2, enemyTank3, enemyTank4, enemyTank5;
+
+    @FXML
+    private Rectangle pointsRectangle;
 
     @FXML
     private ImageView image1, image2, image3, image4, image5, image6, image7, image8, image9, image10, image11,
@@ -53,9 +61,13 @@ public class randomMapController {
     private BooleanProperty dPressed = new SimpleBooleanProperty();
     private BooleanProperty lPressed = new SimpleBooleanProperty();
     private BooleanProperty shotOnce = new SimpleBooleanProperty(true);
-    private volatile BooleanProperty playerTimer = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty playerShotTimer = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty enemyShotTimer = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty gameOn = new SimpleBooleanProperty(true);
+    private volatile BooleanProperty xPressed = new SimpleBooleanProperty();
+    private volatile BooleanProperty gameOverLabelDisplayed = new SimpleBooleanProperty(false);
 
-    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed);
+    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed).or(xPressed);
 
     private Image brickImage = new Image("TanksAttack/Brick.png");
     private Image waterImage = new Image("TanksAttack/Water.png");
@@ -65,10 +77,12 @@ public class randomMapController {
     private ArrayList<ImageView> blocks = new ArrayList<>();
     private ArrayList<ImageView> bricks = new ArrayList<>();
     private ArrayList<ImageView> bullets = new ArrayList<>();
+    private ArrayList<ImageView> enemyBullets = new ArrayList<>();
     private ArrayList<ImageView> enemyTanks = new ArrayList<>();
 
-    private double movementVariable = 1.5;
-    private double enemyMovementVariable = 0.5;
+    private double movementVariable = 1.9;
+    private double enemyMovementVariable = 1.9;
+    private int enemyShootCooldown = 1000;
 
     private TranslateTransition transition;
 
@@ -80,8 +94,13 @@ public class randomMapController {
     private volatile int tankRandomInt4 = 0;
     private volatile int tankRandomInt5 = 0;
 
+    private int runPoints = 0;
+
 
     public void initialize() {
+
+        runPointsLabel.setText("This Run: " + runPoints);
+        allPointsLabel.setText("All: " + PlayerData.points);
 
         generateMap();
         movementSetup();
@@ -98,6 +117,7 @@ public class randomMapController {
         collisionTimer.start();
         shotCooldown.start();
         enemyMoveTimer.start();
+        enemyShotCooldownThread.start();
     }
 
 //    Player Movement && Shooting
@@ -123,6 +143,9 @@ public class randomMapController {
             if (e.getCode() == KeyCode.L) {
                 lPressed.set(true);
             }
+            if (e.getCode() == KeyCode.X) {
+                xPressed.set(true);
+            }
         });
 
         scene.setOnKeyReleased(e -> {
@@ -146,53 +169,69 @@ public class randomMapController {
                 lPressed.set(false);
                 shotOnce.set(true);
             }
+            if (e.getCode() == KeyCode.X) {
+                xPressed.set(false);
+            }
         });
     }
 
     private AnimationTimer PlayerATimer = new AnimationTimer() {
         @Override
         public void handle(long l) {
-            if (wPressed.get() && !checkPlayerCollision() && tank.getLayoutY() > 0) {
-                tank.setLayoutY(tank.getLayoutY() - movementVariable);
-                tank.setRotate(0);
-                if (checkPlayerCollision()) {
-                    tank.setLayoutY(tank.getLayoutY() + movementVariable);
-                }
-            }
-
-            if (sPressed.get() && !checkPlayerCollision() &&
-                    tank.getLayoutY() + tank.getFitHeight() < scene.getPrefHeight()) {
-                tank.setLayoutY(tank.getLayoutY() + movementVariable);
-                tank.setRotate(180);
-                if (checkPlayerCollision()) {
+            if (gameOn.get()) {
+                if (wPressed.get() && !checkPlayerCollision() && tank.getLayoutY() > 0) {
                     tank.setLayoutY(tank.getLayoutY() - movementVariable);
+                    tank.setRotate(0);
+                    if (checkPlayerCollision()) {
+                        tank.setLayoutY(tank.getLayoutY() + movementVariable);
+                    }
                 }
-            }
 
-            if (aPressed.get() && !checkPlayerCollision() && tank.getLayoutX() > 0) {
-                tank.setLayoutX(tank.getLayoutX() - movementVariable);
-                tank.setRotate(270);
-                if (checkPlayerCollision()) {
-                    tank.setLayoutX(tank.getLayoutX() + movementVariable);
+                if (sPressed.get() && !checkPlayerCollision() &&
+                        tank.getLayoutY() + tank.getFitHeight() < scene.getPrefHeight()) {
+                    tank.setLayoutY(tank.getLayoutY() + movementVariable);
+                    tank.setRotate(180);
+                    if (checkPlayerCollision()) {
+                        tank.setLayoutY(tank.getLayoutY() - movementVariable);
+                    }
                 }
-            }
 
-            if (dPressed.get() && !checkPlayerCollision() &&
-                    tank.getLayoutX() + tank.getFitWidth() < scene.getPrefWidth()) {
-                tank.setLayoutX(tank.getLayoutX() + movementVariable);
-                tank.setRotate(90);
-                if (checkPlayerCollision()) {
+                if (aPressed.get() && !checkPlayerCollision() && tank.getLayoutX() > 0) {
                     tank.setLayoutX(tank.getLayoutX() - movementVariable);
+                    tank.setRotate(270);
+                    if (checkPlayerCollision()) {
+                        tank.setLayoutX(tank.getLayoutX() + movementVariable);
+                    }
+                }
+
+                if (dPressed.get() && !checkPlayerCollision() &&
+                        tank.getLayoutX() + tank.getFitWidth() < scene.getPrefWidth()) {
+                    tank.setLayoutX(tank.getLayoutX() + movementVariable);
+                    tank.setRotate(90);
+                    if (checkPlayerCollision()) {
+                        tank.setLayoutX(tank.getLayoutX() - movementVariable);
+                    }
+                }
+
+                if (lPressed.get() && shotOnce.get() && playerShotTimer.get()) {
+                    ImageView img = playerShootBullet();
+                    scene.getChildren().add(img);
+                    bullets.add(img);
+                    transition.play();
+                    shotOnce.set(false);
+                    playerShotTimer.set(false);
                 }
             }
-
-            if (lPressed.get() && shotOnce.get() && playerTimer.get()) {
-                ImageView img = createBullet();
-                scene.getChildren().add(img);
-                bullets.add(img);
-                transition.play();
-                shotOnce.set(false);
-                playerTimer.set(false);
+            if(!gameOn.get() && !gameOverLabelDisplayed.get()){
+                gameOverLabelDisplayed.set(true);
+                Label label = new Label("GAME OVER! PRESS X TO CONTINUE");
+                label.setLayoutX(17);
+                label.setLayoutY(225);
+                label.setPrefSize(965,100);
+                label.setAlignment(Pos.CENTER);
+                label.setFont(new Font(49));
+                label.setTextFill(Color.RED);
+                scene.getChildren().add(label);
             }
         }
     };
@@ -206,18 +245,27 @@ public class randomMapController {
             if (tank.getBoundsInParent().intersects(imageView.getBoundsInParent()))
                 return true;
         }
-        return false;
+        return tank.getBoundsInParent().intersects(pointsRectangle.getBoundsInParent());
     }
 
     private Thread shotCooldown = new Thread(() -> {
         while (true) {
-            if (!playerTimer.get()) {
+            if (!playerShotTimer.get()) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                playerTimer.set(true);
+                playerShotTimer.set(true);
+            }
+            if(!gameOn.get() && xPressed.get()) {
+                try {
+                    App.setRoot("welcomeScreen");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Thread.currentThread().interrupt();
+                return;
             }
         }
     });
@@ -225,14 +273,16 @@ public class randomMapController {
     private AnimationTimer collisionTimer = new AnimationTimer() {
         @Override
         public void handle(long l) {
-            checkBlockBulletCollision();
+            checkBlockBulletCollision(bullets);
+            checkBlockBulletCollision(enemyBullets);
             checkTankBulletCollision();
         }
     };
 
-    String waterUrl = "file:/C:/Users/PortalJumper/IdeaProjects/TanksAttack/target/classes/TanksAttack/Water.png";
+    private String waterUrl = "file:/C:/Users/PortalJumper/IdeaProjects/TanksAttack/target/classes/TanksAttack/Water" +
+            ".png";
 
-    private void checkBlockBulletCollision() {
+    private void checkBlockBulletCollision(ArrayList<ImageView> bullets) {
         for (ImageView imageView : bullets) {
             for (ImageView imageView1 : blocks) {
                 if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
@@ -255,23 +305,27 @@ public class randomMapController {
     private void checkTankBulletCollision() {
         for (ImageView imageView : bullets) {
             for (ImageView imageView1 : enemyTanks) {
-                int counter = 1;
                 if (imageView.getBoundsInParent().intersects((imageView1.getBoundsInParent()))) {
-                    System.out.println("aaa");
                     imageView1.setLayoutX(randomX());
                     imageView1.setLayoutY(randomY());
                     while (checkEnemyCollision(imageView1)) {
-                        System.out.println("bbb" + counter);
                         imageView1.setLayoutX(randomX());
                         imageView1.setLayoutY(randomY());
-                        counter++;
                     }
                     scene.getChildren().remove(imageView);
                     bullets.remove(imageView);
+                    runPoints += 100;
+                    runPointsLabel.setText("This Run: " + runPoints);
                     PlayerData.points += 100;
-                    pointsLabel.setText("Points:" + PlayerData.points);
+                    allPointsLabel.setText("All: " + PlayerData.points);
                     return;
                 }
+            }
+        }
+        for (ImageView imageView : enemyBullets){
+            if(imageView.getBoundsInParent().intersects(tank.getBoundsInParent())){
+                scene.getChildren().remove(tank);
+                gameOn.set(false);
             }
         }
     }
@@ -290,7 +344,7 @@ public class randomMapController {
         return rand;
     }
 
-    private ImageView createBullet() {
+    private ImageView playerShootBullet() {
         ImageView img = new ImageView("TanksAttack/bullet.png");
         img.setFitHeight(30);
         img.setFitWidth(10);
@@ -362,7 +416,6 @@ public class randomMapController {
                     enemyTankMove(tankRandomInt4, tank);
                 if (counter == 5)
                     enemyTankMove(tankRandomInt5, tank);
-                counter++;
 
                 if (checkEnemyCollision(tank)) {
                     tank.setLayoutY(tank.getLayoutY() + enemyMovementVariable);
@@ -375,9 +428,74 @@ public class randomMapController {
                     if (checkEnemyCollision(tank))
                         tank.setLayoutX(tank.getLayoutX() - (enemyMovementVariable * 2));
                 }
+
+                if(enemyShotTimer.get()) {
+                    ImageView img = enemyShootBullet(tank);
+                    scene.getChildren().add(img);
+                    enemyBullets.add(img);
+                    transition.play();
+                }
+                if(counter == 5)
+                    enemyShotTimer.set(false);
+                counter++;
             }
         }
     };
+
+    private ImageView enemyShootBullet(ImageView tank) {
+        ImageView img = new ImageView("TanksAttack/bullet.png");
+        img.setFitHeight(30);
+        img.setFitWidth(10);
+        if (tank.getRotate() == 0) {
+            img.setLayoutX(tank.getLayoutX() + 20);
+            img.setLayoutY(tank.getLayoutY() - 30);
+            img.setRotate(0);
+            transition = new TranslateTransition(Duration.seconds(2), img);
+            transition.setToY(-600);
+            transition.setOnFinished(e -> {
+                scene.getChildren().remove(img);
+                enemyBullets.remove(img);
+            });
+        }
+
+        if (tank.getRotate() == 90) {
+            img.setLayoutX(tank.getLayoutX() + 55);
+            img.setLayoutY(tank.getLayoutY() + 10);
+            img.setRotate(90);
+            transition = new TranslateTransition(Duration.seconds(3), img);
+            transition.setToX(1050);
+            transition.setOnFinished(e -> {
+                scene.getChildren().remove(img);
+                enemyBullets.remove(img);
+            });
+        }
+
+        if (tank.getRotate() == 180) {
+            img.setLayoutX(tank.getLayoutX() + 20);
+            img.setLayoutY(tank.getLayoutY() + 35);
+            img.setRotate(180);
+            transition = new TranslateTransition(Duration.seconds(2), img);
+            transition.setToY(600);
+            transition.setOnFinished(e -> {
+                scene.getChildren().remove(img);
+                enemyBullets.remove(img);
+            });
+        }
+
+        if (tank.getRotate() == 270) {
+            img.setLayoutX(tank.getLayoutX() - 20);
+            img.setLayoutY(tank.getLayoutY() + 10);
+            img.setRotate(270);
+            transition = new TranslateTransition(Duration.seconds(3), img);
+            transition.setToX(-1050);
+            transition.setOnFinished(e -> {
+                scene.getChildren().remove(img);
+                enemyBullets.remove(img);
+            });
+        }
+        return img;
+    }
+
 
     private boolean checkEnemyCollision(ImageView enemyTank) {
         for (ImageView imageView : blocks) {
@@ -398,6 +516,8 @@ public class randomMapController {
             if (enemyTank.getBoundsInParent().intersects(imageView1.getBoundsInParent()))
                 return true;
         }
+        if(enemyTank.getBoundsInParent().intersects(pointsRectangle.getBoundsInParent()))
+            return true;
         return enemyTank.getBoundsInParent().intersects(tank.getBoundsInParent());
     }
 
@@ -409,15 +529,15 @@ public class randomMapController {
             }
             if (tankRandomInt == 1) {
                 tank.setLayoutY(tank.getLayoutY() + enemyMovementVariable);
-                tank.setRotate(90);
+                tank.setRotate(180);
             }
             if (tankRandomInt == 2) {
                 tank.setLayoutX(tank.getLayoutX() - enemyMovementVariable);
-                tank.setRotate(180);
+                tank.setRotate(270);
             }
             if (tankRandomInt == 3) {
                 tank.setLayoutX(tank.getLayoutX() + enemyMovementVariable);
-                tank.setRotate(270);
+                tank.setRotate(90);
             }
         }
     }
@@ -430,9 +550,22 @@ public class randomMapController {
             tankRandomInt4 = random.nextInt(4);
             tankRandomInt5 = random.nextInt(4);
             try {
-                Thread.sleep(500);
+                Thread.sleep(700);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    });
+
+    private Thread enemyShotCooldownThread = new Thread(() -> {
+        while (true) {
+            if (!enemyShotTimer.get()) {
+                try {
+                    Thread.sleep(enemyShootCooldown);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                enemyShotTimer.set(true);
             }
         }
     });
@@ -537,4 +670,5 @@ public class randomMapController {
         unassignedBlocks.add(image9);
         unassignedBlocks.add(image10);
     }
+
 }

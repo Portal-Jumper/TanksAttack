@@ -56,11 +56,6 @@
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="image63" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Metal_Plate.png" />
-         </image>
-      </ImageView>
       <ImageView fx:id="image54" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Metal_Plate.png" />
@@ -376,7 +371,7 @@
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank1" fitHeight="48.0" fitWidth="48.0" layoutX="300.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank1" fitHeight="48.0" fitWidth="48.0" layoutX="100.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
@@ -386,17 +381,17 @@
             <Image url="@enemyTank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank3" fitHeight="48.0" fitWidth="48.0" layoutX="500.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank3" fitHeight="48.0" fitWidth="48.0" layoutX="600.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank4" fitHeight="48.0" fitWidth="48.0" layoutX="600.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank4" fitHeight="48.0" fitWidth="48.0" layoutX="700.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="enemyTank5" fitHeight="48.0" fitWidth="48.0" layoutX="700.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="enemyTank5" fitHeight="48.0" fitWidth="48.0" layoutX="850.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@enemyTank.png" />
          </image>
@@ -542,11 +537,6 @@
          </image>
       </ImageView>
       <ImageView fx:id="image102" fitHeight="50.0" fitWidth="50.0" layoutX="850.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Metal_Plate.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="image93" fitHeight="50.0" fitWidth="50.0" layoutX="850.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Metal_Plate.png" />
          </image>
@@ -731,8 +721,8 @@
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#4a4949" height="50.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
-      <Label fx:id="pointsLabel" alignment="CENTER" layoutY="12.0" prefHeight="20.0" prefWidth="100.0" text="Points: 0" textFill="WHITE">
+      <Rectangle fx:id="pointsRectangle" arcHeight="5.0" arcWidth="5.0" fill="#4a4949" height="50.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+      <Label alignment="CENTER" layoutY="-2.0" prefHeight="15.0" prefWidth="100.0" text="Points: " textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font></Label>
@@ -1027,6 +1017,26 @@
          </image>
       </ImageView>
       <ImageView fx:id="image189" fitHeight="50.0" fitWidth="50.0" layoutX="300.0" layoutY="450.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Metal_Plate.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="runPointsLabel" alignment="CENTER" layoutY="13.0" prefHeight="15.0" prefWidth="100.0" text="This Run: 0" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="allPointsLabel" alignment="CENTER" layoutY="28.0" prefHeight="15.0" prefWidth="100.0" text="All: 0" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="image63" fitHeight="50.0" fitWidth="50.0" layoutX="300.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Metal_Plate.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="image93" fitHeight="50.0" fitWidth="50.0" layoutX="700.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Metal_Plate.png" />
          </image>
