@@ -99,7 +99,7 @@ public class randomMapController {
 
     public void initialize() {
 
-        runPointsLabel.setText("This Run: " + runPoints);
+        runPointsLabel.setText("Game: " + runPoints);
         allPointsLabel.setText("All: " + PlayerData.points);
 
         generateMap();
@@ -316,7 +316,7 @@ public class randomMapController {
                     scene.getChildren().remove(imageView);
                     bullets.remove(imageView);
                     runPoints += 100;
-                    runPointsLabel.setText("This Run: " + runPoints);
+                    runPointsLabel.setText("Game: " + runPoints);
                     PlayerData.points += 100;
                     allPointsLabel.setText("All: " + PlayerData.points);
                     return;
