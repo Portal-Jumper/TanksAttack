@@ -1,8 +1,5 @@
 package TanksAttack;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -24,7 +21,7 @@ public class LevelSelectionController {
     Label pointsLabel, difficultyLane1, difficultyLane2, difficultyLane3, difficultyLane4;
 
     @FXML
-    ChoiceBox levelChoiceBox = new ChoiceBox();
+    ChoiceBox<String> levelChoiceBox = new ChoiceBox<>();
 
     public void initialize() {
         difficultyEasy();
