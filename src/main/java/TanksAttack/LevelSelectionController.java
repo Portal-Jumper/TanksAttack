@@ -24,6 +24,7 @@ public class LevelSelectionController {
     ChoiceBox<String> levelChoiceBox = new ChoiceBox<>();
 
     public void initialize() {
+        App.resizeSmall();
         difficultyEasy();
         levelChoiceBox.setValue("Easy");
         levelChoiceBox.getItems().add("Easy");

@@ -6,15 +6,13 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -27,7 +25,7 @@ public class randomMapController {
     private AnchorPane scene;
 
     @FXML
-    private Label allPointsLabel,runPointsLabel;
+    private Label allPointsLabel, runPointsLabel;
 
     @FXML
     private ImageView tank, enemyTank1, enemyTank2, enemyTank3, enemyTank4, enemyTank5;
@@ -53,7 +51,7 @@ public class randomMapController {
             image157, image158, image159, image160, image161, image162, image163, image164, image165, image166,
             image167, image168, image169, image170, image171, image172, image173, image174, image175, image176,
             image177, image178, image179, image180, image181, image182, image183, image184, image185, image186,
-            image187, image188, image189, image190, image191, metal1, metal2, metal3, metal4, metal5, metal6;
+            image187, image188, image189, image190, image191, image192, metal1, metal2, metal3, metal4, metal5, metal6;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
@@ -64,10 +62,9 @@ public class randomMapController {
     private volatile BooleanProperty playerShotTimer = new SimpleBooleanProperty(true);
     private volatile BooleanProperty enemyShotTimer = new SimpleBooleanProperty(true);
     private volatile BooleanProperty gameOn = new SimpleBooleanProperty(true);
-    private volatile BooleanProperty xPressed = new SimpleBooleanProperty();
-    private volatile BooleanProperty gameOverLabelDisplayed = new SimpleBooleanProperty(false);
+    private volatile BooleanProperty gameOverAlertDisplayed = new SimpleBooleanProperty(false);
 
-    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed).or(xPressed);
+    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(lPressed);
 
     private Image brickImage = new Image("TanksAttack/Brick.png");
     private Image waterImage = new Image("TanksAttack/Water.png");
@@ -143,9 +140,6 @@ public class randomMapController {
             if (e.getCode() == KeyCode.L) {
                 lPressed.set(true);
             }
-            if (e.getCode() == KeyCode.X) {
-                xPressed.set(true);
-            }
         });
 
         scene.setOnKeyReleased(e -> {
@@ -168,9 +162,6 @@ public class randomMapController {
             if (e.getCode() == KeyCode.L) {
                 lPressed.set(false);
                 shotOnce.set(true);
-            }
-            if (e.getCode() == KeyCode.X) {
-                xPressed.set(false);
             }
         });
     }
@@ -222,16 +213,21 @@ public class randomMapController {
                     playerShotTimer.set(false);
                 }
             }
-            if(!gameOn.get() && !gameOverLabelDisplayed.get()){
-                gameOverLabelDisplayed.set(true);
-                Label label = new Label("GAME OVER! PRESS X TO CONTINUE");
-                label.setLayoutX(17);
-                label.setLayoutY(225);
-                label.setPrefSize(965,100);
-                label.setAlignment(Pos.CENTER);
-                label.setFont(new Font(49));
-                label.setTextFill(Color.RED);
-                scene.getChildren().add(label);
+            if (!gameOn.get() && !gameOverAlertDisplayed.get()) {
+                gameOverAlertDisplayed.set(true);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle(null);
+                alert.setHeaderText("GAME OVER!");
+                alert.setResizable(false);
+                alert.setContentText("You earned " + runPoints + " points this run!");
+                alert.setOnHidden(evt -> {
+                    try {
+                        App.setRoot("levelSelection");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                alert.show();
             }
         }
     };
@@ -257,16 +253,6 @@ public class randomMapController {
                     e.printStackTrace();
                 }
                 playerShotTimer.set(true);
-            }
-            if(!gameOn.get() && xPressed.get()) {
-                try {
-                    App.setRoot("levelSelection");
-                    App.resizeSmall();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Thread.currentThread().interrupt();
-                return;
             }
         }
     });
@@ -323,8 +309,8 @@ public class randomMapController {
                 }
             }
         }
-        for (ImageView imageView : enemyBullets){
-            if(imageView.getBoundsInParent().intersects(tank.getBoundsInParent())){
+        for (ImageView imageView : enemyBullets) {
+            if (imageView.getBoundsInParent().intersects(tank.getBoundsInParent())) {
                 scene.getChildren().remove(tank);
                 gameOn.set(false);
             }
@@ -430,13 +416,13 @@ public class randomMapController {
                         tank.setLayoutX(tank.getLayoutX() - (enemyMovementVariable * 2));
                 }
 
-                if(enemyShotTimer.get()) {
+                if (enemyShotTimer.get()) {
                     ImageView img = enemyShootBullet(tank);
                     scene.getChildren().add(img);
                     enemyBullets.add(img);
                     transition.play();
                 }
-                if(counter == 5)
+                if (counter == 5)
                     enemyShotTimer.set(false);
                 counter++;
             }
@@ -517,7 +503,7 @@ public class randomMapController {
             if (enemyTank.getBoundsInParent().intersects(imageView1.getBoundsInParent()))
                 return true;
         }
-        if(enemyTank.getBoundsInParent().intersects(pointsRectangle.getBoundsInParent()))
+        if (enemyTank.getBoundsInParent().intersects(pointsRectangle.getBoundsInParent()))
             return true;
         return enemyTank.getBoundsInParent().intersects(tank.getBoundsInParent());
     }
@@ -654,6 +640,7 @@ public class randomMapController {
                 image184, image185,
                 image186, image187, image188, image189, image190);
         unassignedBlocks.add(image191);
+        unassignedBlocks.add(image192);
     }
 
 

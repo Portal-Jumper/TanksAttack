@@ -1041,5 +1041,10 @@
             <Image url="@Metal_Plate.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="image192" fitHeight="50.0" fitWidth="50.0" layoutX="500.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Metal_Plate.png" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>
