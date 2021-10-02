@@ -1,10 +1,7 @@
 package TanksAttack;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -140,5 +137,11 @@ public class LevelSelectionController {
     @FXML
     private void saveToDB() throws SQLException, ClassNotFoundException {
         DatabaseConnection.saveToDB();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(null);
+        alert.setHeaderText("SAVED!");
+        alert.setResizable(false);
+        alert.setContentText(null);
+        alert.show();
     }
 }
