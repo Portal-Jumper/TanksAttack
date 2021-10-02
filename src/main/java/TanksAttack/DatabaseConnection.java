@@ -49,4 +49,10 @@ public class DatabaseConnection {
         }
         return 0;
     }
+
+    public static void saveToDB() throws SQLException, ClassNotFoundException {
+        Statement statement = connect();
+        statement.executeUpdate(String.format("UPDATE Users SET points = %d WHERE login = '%s'",PlayerData.points,
+                PlayerData.login));
+    }
 }

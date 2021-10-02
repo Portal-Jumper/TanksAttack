@@ -17,9 +17,11 @@ public class LoginController {
 
     @FXML
     private void logIn() throws IOException, SQLException, ClassNotFoundException {
-        if(DatabaseConnection.LogIn(usernameField.getText().toLowerCase(),passwordField.getText()))
-        App.setRoot("levelSelection");
-        PlayerData.points = DatabaseConnection.getPointsFromDB(usernameField.getText().toLowerCase());
+        if (DatabaseConnection.LogIn(usernameField.getText().toLowerCase(), passwordField.getText())) {
+            PlayerData.points = DatabaseConnection.getPointsFromDB(usernameField.getText().toLowerCase());
+            App.setRoot("levelSelection");
+            PlayerData.login = usernameField.getText().toLowerCase();
+        }
     }
 
     @FXML

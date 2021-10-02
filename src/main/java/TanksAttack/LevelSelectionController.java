@@ -8,6 +8,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LevelSelectionController {
 
@@ -134,5 +135,10 @@ public class LevelSelectionController {
         GameData.movementVariable = 0.5;
         GameData.enemyMovementVariable = 1.9;
         GameData.enemyShootCooldown = 500;
+    }
+
+    @FXML
+    private void saveToDB() throws SQLException, ClassNotFoundException {
+        DatabaseConnection.saveToDB();
     }
 }
