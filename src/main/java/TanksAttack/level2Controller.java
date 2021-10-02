@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -19,10 +20,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class randomMapController {
+public class level2Controller {
 
     @FXML
     private AnchorPane scene;
+    
+    @FXML
+    private Pane emptyPane;
 
     @FXML
     private Label allPointsLabel, runPointsLabel;
@@ -38,20 +42,13 @@ public class randomMapController {
             image12, image13, image14, image15, image16, image17, image18, image19, image20, image21, image22, image23,
             image24, image25, image26, image27, image28, image29, image30, image31, image32, image33, image34, image35,
             image36, image37, image38, image39, image40, image41, image42, image43, image44, image45, image46, image47,
-            image48, image49, image50, image51, image52, image53, image54, image55, image56, image57, image58, image59,
+            image48, image49, image50, image51, image52, image53, image54, image55, image56,image57, image58, image59,
             image60, image61, image62, image63, image64, image65, image66, image67, image68, image69, image70, image71,
             image72, image73, image74, image75, image76, image77, image78, image79, image80, image81, image82, image83,
             image84, image85, image86, image87, image88, image89, image90, image91, image92, image93, image94, image95,
             image96, image97, image98, image99, image100, image101, image102, image103, image104, image105, image106,
-            image107, image108, image109, image110, image111, image112, image113, image114, image115, image116,
-            image117, image118, image119, image120, image121, image122, image123, image124, image125, image126,
-            image127, image128, image129, image130, image131, image132, image133, image134, image135, image136,
-            image137, image138, image139, image140, image141, image142, image143, image144, image145, image146,
-            image147, image148, image149, image150, image151, image152, image153, image154, image155, image156,
-            image157, image158, image159, image160, image161, image162, image163, image164, image165, image166,
-            image167, image168, image169, image170, image171, image172, image173, image174, image175, image176,
-            image177, image178, image179, image180, image181, image182, image183, image184, image185, image186,
-            image187, image188, image189, image190, image191, image192, metal1, metal2, metal3, metal4, metal5, metal6;
+            image107, image108,image109, image110, image111, image112, image113, image114,image115,  metal1, metal2, metal3, 
+            metal4, metal5, metal6;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
@@ -265,6 +262,8 @@ public class randomMapController {
             checkTankBulletCollision();
         }
     };
+
+   
 
     private void checkBlockBulletCollision(ArrayList<ImageView> bullets) {
         for (ImageView imageView : bullets) {
@@ -494,6 +493,8 @@ public class randomMapController {
             return true;
         if (enemyTank.getLayoutX() + enemyTank.getFitWidth() > scene.getPrefWidth())
             return true;
+        if (enemyTank.getBoundsInParent().intersects(emptyPane.getBoundsInParent()))
+            return true;
         ArrayList<ImageView> temp = new ArrayList<>(enemyTanks);
         temp.remove(enemyTank);
         for (ImageView imageView1 : temp) {
@@ -558,42 +559,50 @@ public class randomMapController {
 //    Random Map Generation
 
     private void generateMap() {
-        fillEnemyTanks();
-        fillUnassignedBlocks();
+    	fillEnemyTanks();
+        level1Controller.setWater(image1, image2, image3, image4, blocks, waterImage);
+        level1Controller.setWater(image5, image6, image7, image8, blocks, waterImage);
+        level1Controller.setWater(image9, image10, image11, image12, blocks, waterImage);
+        level1Controller.setWater(image13, image14, image15, image16, blocks, waterImage);
+        level1Controller.setWater(image17, image18, image19, image20, blocks, waterImage);
+        level1Controller.setWater(image21, image22, image23, image24, blocks, waterImage);
+        level1Controller.setWater(image25, image26, image27, image28, blocks, waterImage);
+        level1Controller.setWater(image29, image30, image31, image32, blocks, waterImage);
+        level1Controller.setWater(image33, image34, image35, image36, blocks, waterImage);
+        level1Controller.setWater(image37, image38, image39, image40, blocks, waterImage);
+        level1Controller.setWater(image41, image42, image43, image44, blocks, waterImage);
+        level1Controller.setWater(image45, image46, image47, image48, blocks, waterImage);
+        level1Controller.setWater(image49, image50, image51, image52, blocks, waterImage);
+        level1Controller.setWater(image53, image54, image55, image56, blocks, waterImage);
+        level1Controller.setWater(image57, image58, image59, image60, blocks, waterImage);
+        level1Controller.setWater(image61, image62, image63, image64, blocks, waterImage);
+        level1Controller.setWater(image65, image66, image67, image68, blocks, waterImage);
+        level1Controller.setWater(image69, image70, image71, image72, blocks, waterImage);
+        level1Controller.setWater(image73, image74, image75, image76, blocks, waterImage);
+        level1Controller.setWater(image77, image78, image79, image80, blocks, waterImage);
+        level1Controller.setWater(image81, image82, image83, image84, blocks, waterImage);
+        level1Controller.setWater(image85, image86, image87, image88, blocks, waterImage);
+        level1Controller.setWater(image89, image90, image91, image92, blocks, waterImage);
+        level1Controller.setWater(image93, image94, image95, image96, blocks, waterImage);
+        level1Controller.setWater(image97, image98, image99, image100, blocks, waterImage);
+        level1Controller.setWater(image101, image102, image103, image104, blocks, waterImage);
+        level1Controller.setWater(image105, image106, image107, image108, blocks, waterImage);
+        level1Controller.setWater(image109, image110, image111, image112, blocks, waterImage);
+        blocks.add(image113);
+        blocks.add(image114);
+        blocks.add(image115);
         blocks.add(metal1);
         blocks.add(metal2);
         blocks.add(metal3);
         blocks.add(metal4);
         blocks.add(metal5);
         blocks.add(metal6);
-        for (ImageView img : unassignedBlocks) {
-            int rand = random.nextInt(3);
-            if (rand == 0) {
-                int rand2 = random.nextInt(3);
-                if (rand2 == 2) {
-                    img.setImage(metalImage);
-                    blocks.add(img);
-                } else {
-                    scene.getChildren().remove(img);
-                }
-            }
-            if (rand == 1) {
-                int rand3 = random.nextInt(3);
-                if (rand3 == 2) {
-                    img.setImage(waterImage);
-                    blocks.add(img);
-                } else {
-                    scene.getChildren().remove(img);
-                }
-            }
-            if (rand == 2) {
-                img.setImage(brickImage);
-                blocks.add(img);
-                bricks.add(img);
-            }
-        }
+        image113.setImage(waterImage);
+        image114.setImage(waterImage);
+        image115.setImage(waterImage);
+        
     }
-
+    
     private void fillEnemyTanks() {
         enemyTanks.add(enemyTank1);
         enemyTanks.add(enemyTank2);
@@ -602,58 +611,6 @@ public class randomMapController {
         enemyTanks.add(enemyTank5);
     }
 
-    private void fillUnassignedBlocks() {
-        addToUnassignedBlocks(image1, image2, image3, image4, image5, image6, image7, image8, image9, image10);
-        addToUnassignedBlocks(image11, image12, image13, image14, image15, image16, image17, image18, image19, image20);
-        addToUnassignedBlocks(image21, image22, image23, image24, image25, image26, image27, image28, image29, image30);
-        addToUnassignedBlocks(image31, image32, image33, image34, image35, image36, image37, image38, image39, image40);
-        addToUnassignedBlocks(image41, image42, image43, image44, image45, image46, image47, image48, image49, image50);
-        addToUnassignedBlocks(image51, image52, image53, image54, image55, image56, image57, image58, image59, image60);
-        addToUnassignedBlocks(image61, image62, image63, image64, image65, image66, image67, image68, image69, image70);
-        addToUnassignedBlocks(image71, image72, image73, image74, image75, image76, image77, image78, image79, image80);
-        addToUnassignedBlocks(image81, image82, image83, image84, image85, image86, image87, image88, image89, image90);
-        addToUnassignedBlocks(image91, image92, image93, image94, image95, image96, image97, image98, image99,
-                image100);
-        addToUnassignedBlocks(image101, image102, image103, image104, image105, image106, image107, image108,
-                image109, image110);
-        addToUnassignedBlocks(image111, image112, image113, image114, image115, image116, image117, image118,
-                image119, image120);
-        addToUnassignedBlocks(image121, image122, image123, image124, image125, image126, image127, image128,
-                image129, image130);
-        addToUnassignedBlocks(image131, image132, image133, image134, image135, image136,
-                image137,
-                image138, image139, image140);
-        addToUnassignedBlocks(image141, image142, image143, image144, image145, image146, image147,
-                image148, image149,
-                image150);
-        addToUnassignedBlocks(image151, image152, image153, image154, image155, image156, image157, image158, image159,
-                image160);
-        addToUnassignedBlocks(image161,
-                image162, image163, image164, image165, image166, image167, image168, image169, image170);
-        addToUnassignedBlocks(image171,
-                image172, image173,
-                image174, image175, image176, image177, image178, image179, image180);
-        addToUnassignedBlocks(image181, image182, image183,
-                image184, image185,
-                image186, image187, image188, image189, image190);
-        unassignedBlocks.add(image191);
-        unassignedBlocks.add(image192);
-    }
-
-
-    private void addToUnassignedBlocks(ImageView image1, ImageView image2, ImageView image3, ImageView image4,
-                                       ImageView image5, ImageView image6, ImageView image7, ImageView image8,
-                                       ImageView image9, ImageView image10) {
-        unassignedBlocks.add(image1);
-        unassignedBlocks.add(image2);
-        unassignedBlocks.add(image3);
-        unassignedBlocks.add(image4);
-        unassignedBlocks.add(image5);
-        unassignedBlocks.add(image6);
-        unassignedBlocks.add(image7);
-        unassignedBlocks.add(image8);
-        unassignedBlocks.add(image9);
-        unassignedBlocks.add(image10);
-    }
+ 
 
 }
