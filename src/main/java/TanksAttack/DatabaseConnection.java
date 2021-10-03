@@ -1,6 +1,7 @@
 package TanksAttack;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseConnection {
 
@@ -51,5 +52,20 @@ public class DatabaseConnection {
         Statement statement = connect();
         statement.executeUpdate(String.format("UPDATE Users SET points = %d WHERE login = '%s'", PlayerData.points,
                 PlayerData.login));
+    }
+
+    public static ArrayList getTenBestPlayers() throws SQLException, ClassNotFoundException {
+        ArrayList<String> nicknames = new ArrayList<>();
+        ArrayList<String> points = new ArrayList<>();
+        ArrayList<ArrayList> list = new ArrayList<>();
+        Statement statement = connect();
+        ResultSet rs = statement.executeQuery("SELECT login,points From Users ORDER BY points DESC");
+        while(rs.next()){
+            nicknames.add(rs.getString("login"));
+            points.add(rs.getString("points"));
+        }
+        list.add(nicknames);
+        list.add(points);
+        return list;
     }
 }
