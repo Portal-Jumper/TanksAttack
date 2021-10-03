@@ -94,7 +94,7 @@ public class level4Controller {
 		allPointsLabel.setText("All: " + PlayerData.points);
 
 		generateMap();
-		movementSetup();
+		keyAssigment();
 
 		keyPressed.addListener(((observableValue, aBoolean, t1) -> {
 			if (!aBoolean) {
@@ -113,7 +113,7 @@ public class level4Controller {
 
 //    Player Movement && Shooting
 
-	private void movementSetup() {
+	private void keyAssigment() {
 		scene.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.W) {
 				wPressed.set(true);
@@ -133,6 +133,15 @@ public class level4Controller {
 
 			if (e.getCode() == KeyCode.L) {
 				lPressed.set(true);
+			}
+			
+			if(e.getCode() == KeyCode.ESCAPE) {
+				try {
+					App.setRoot("levelSelection");
+				} catch (IOException e1) {
+					
+					e1.printStackTrace();
+				}
 			}
 		});
 

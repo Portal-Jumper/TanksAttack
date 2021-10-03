@@ -100,7 +100,7 @@ public class randomMapController {
         allPointsLabel.setText("All: " + PlayerData.points);
 
         generateMap();
-        movementSetup();
+        keyAssigment();
 
         keyPressed.addListener(((observableValue, aBoolean, t1) -> {
             if (!aBoolean) {
@@ -119,7 +119,7 @@ public class randomMapController {
 
 //    Player Movement && Shooting
 
-    private void movementSetup() {
+    private void keyAssigment() {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
                 wPressed.set(true);
@@ -140,6 +140,15 @@ public class randomMapController {
             if (e.getCode() == KeyCode.L) {
                 lPressed.set(true);
             }
+            
+            if(e.getCode() == KeyCode.ESCAPE) {
+				try {
+					App.setRoot("levelSelection");
+				} catch (IOException e1) {
+					
+					e1.printStackTrace();
+				}
+			}
         });
 
         scene.setOnKeyReleased(e -> {
