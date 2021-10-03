@@ -24,7 +24,7 @@ public class LoginController {
             PlayerData.login = usernameField.getText().toLowerCase();
         }
 
-        if(!DatabaseConnection.LogIn(usernameField.getText().toLowerCase(), passwordField.getText())) {
+        if (!DatabaseConnection.LogIn(usernameField.getText().toLowerCase(), passwordField.getText())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle(null);
             alert.setHeaderText("Invalid login or password");

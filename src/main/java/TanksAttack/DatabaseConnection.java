@@ -8,9 +8,8 @@ public class DatabaseConnection {
         Class.forName("org.postgresql.Driver");
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Tanks",
                 "postgres", "Admin");
-        Statement statement = connection.createStatement();
 
-        return statement;
+        return connection.createStatement();
     }
 
     public static void addUser(String login, String password, String email) throws ClassNotFoundException,
@@ -35,8 +34,7 @@ public class DatabaseConnection {
         if (rs.next() && rs.getString("Login").equals(login)) {
             rs = statement.executeQuery(String.format("SELECT UserPassword FROM Users WHERE login = '%s' AND " +
                     "UserPassword = '%s'", login, password));
-            if (rs.next() && rs.getString("UserPassword").equals(password))
-                return true;
+            return rs.next() && rs.getString("UserPassword").equals(password);
         }
         return false;
     }
@@ -44,15 +42,14 @@ public class DatabaseConnection {
     public static int getPointsFromDB(String login) throws SQLException, ClassNotFoundException {
         Statement statement = connect();
         ResultSet rs = statement.executeQuery(String.format("SELECT Points FROM Users WHERE login = '%s'", login));
-        while(rs.next()){
+        if (rs.next())
             return Integer.parseInt(rs.getString("Points"));
-        }
         return 0;
     }
 
     public static void saveToDB() throws SQLException, ClassNotFoundException {
         Statement statement = connect();
-        statement.executeUpdate(String.format("UPDATE Users SET points = %d WHERE login = '%s'",PlayerData.points,
+        statement.executeUpdate(String.format("UPDATE Users SET points = %d WHERE login = '%s'", PlayerData.points,
                 PlayerData.login));
     }
 }

@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import org.w3c.dom.css.CSSStyleDeclaration;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -13,10 +12,10 @@ import java.sql.SQLException;
 public class RegisterController {
 
     @FXML
-    TextField usernameField,emailField;
+    TextField usernameField, emailField;
 
     @FXML
-    PasswordField passwordField,confirmPasswordField;
+    PasswordField passwordField, confirmPasswordField;
 
     @FXML
     private void register() throws IOException, SQLException, ClassNotFoundException {
@@ -35,13 +34,13 @@ public class RegisterController {
                 App.setRoot("login");
             }
 
-        if (usernameFree == false)
+        if (!usernameFree)
             displayAlert("Username is occupied");
 
         if (!passwordField.getText().equals(confirmPasswordField.getText()))
             displayAlert("Password are not the same");
 
-        if(!emailField.getText().contains("@"))
+        if (!emailField.getText().contains("@"))
             displayAlert("Wrong email format");
     }
 
