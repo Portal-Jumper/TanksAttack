@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="350.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TanksAttack.rankingController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@rankingBackground.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="ranking" alignment="TOP_CENTER" layoutX="142.0" layoutY="14.0" prefHeight="168.0" prefWidth="316.0" text="Top 10" />
+   </children>
+</AnchorPane>

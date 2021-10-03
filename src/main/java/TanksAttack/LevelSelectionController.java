@@ -94,6 +94,10 @@ public class LevelSelectionController {
         App.resizeBig();
     }
 
+    public void ranking() throws IOException {
+        App.setRoot("ranking");
+    }
+
     private void difficultyEasy() {
         difficultyLane1.setText("Easy Difficulty:");
         difficultyLane2.setText("Your movement speed: 1.9");
