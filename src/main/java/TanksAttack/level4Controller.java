@@ -17,6 +17,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class level4Controller {
@@ -270,20 +271,23 @@ public class level4Controller {
 	};
 
 	private void checkBlockBulletCollision(ArrayList<ImageView> bullets) {
-		for (ImageView imageView : bullets) {
-			for (ImageView imageView1 : blocks) {
+		Iterator<ImageView> it = bullets.iterator();
+		while (it.hasNext()) {
+			ImageView imageView = it.next();
+			Iterator<ImageView> it2 = blocks.iterator();
+			while(it2.hasNext()) {
+				ImageView imageView1 = it2.next();
 				if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
 					if (!bricks.contains(imageView1) && !imageView1.getImage().equals(waterImage)) {
 						scene.getChildren().remove(imageView);
-						bullets.remove(imageView);
+						it.remove();
 					} else if (bricks.contains(imageView1)) {
+						it.remove();
+						it2.remove();
 						scene.getChildren().remove(imageView1);
 						scene.getChildren().remove(imageView);
-						blocks.remove(imageView1);
 						bricks.remove(imageView1);
-						bullets.remove(imageView);
 					}
-					return;
 				}
 			}
 		}
