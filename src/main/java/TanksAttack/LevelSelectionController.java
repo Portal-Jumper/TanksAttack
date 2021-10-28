@@ -3,6 +3,7 @@ package TanksAttack;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,7 +32,8 @@ public class LevelSelectionController {
         levelChoiceBox.getItems().add("Unplayable");
 
         pointsLabel.setText("Points gathered so far: " + PlayerData.points);
-        button1.setTooltip(new Tooltip("Unlocked"));
+        Tooltip tooltip = new Tooltip("Unlocked");
+        button1.setTooltip(tooltip);
         Tooltip tooltip2 = new Tooltip("Points needed to unlock: 1000");
         Tooltip.install(pane2, tooltip2);
         Tooltip tooltip3 = new Tooltip("Points needed to unlock: 2000");
@@ -43,17 +45,17 @@ public class LevelSelectionController {
         button4.setDisable(true);
         if (PlayerData.points >= 1000) {
             button2.setDisable(false);
-            button2.setTooltip(new Tooltip("Unlocked"));
+            button2.setTooltip(tooltip);
             Tooltip.uninstall(pane2, tooltip2);
         }
         if (PlayerData.points >= 2000) {
             button3.setDisable(false);
-            button3.setTooltip(new Tooltip("Unlocked"));
+            button3.setTooltip(tooltip);
             Tooltip.uninstall(pane3, tooltip3);
         }
         if (PlayerData.points >= 3000) {
             button4.setDisable(false);
-            button4.setTooltip(new Tooltip("Unlocked"));
+            button4.setTooltip(tooltip);
             Tooltip.uninstall(pane4, tooltip4);
         }
 
@@ -67,6 +69,10 @@ public class LevelSelectionController {
             if (levelChoiceBox.getValue().equals("Unplayable"))
                 difficultyUnplayable();
         });
+        tooltip.setShowDelay(Duration.seconds(0));
+        tooltip2.setShowDelay(Duration.seconds(0));
+        tooltip3.setShowDelay(Duration.seconds(0));
+        tooltip4.setShowDelay(Duration.seconds(0));
     }
 
     public void level1() throws IOException {
