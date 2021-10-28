@@ -31,11 +31,9 @@ public class App extends Application {
         scene = new Scene(loadFXML("login"));
         stage.setScene(scene);
         stage.show();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-                Platform.exit();
-                System.exit(0);
-            }
+        stage.setOnCloseRequest(e -> {
+            Platform.exit();
+            System.exit(0);
         });
     }
 
