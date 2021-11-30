@@ -32,6 +32,7 @@ public class LoginController {
             alert.setContentText(null);
             alert.show();
         }
+//        App.setRoot("levelSelection");
     }
 
     @FXML
