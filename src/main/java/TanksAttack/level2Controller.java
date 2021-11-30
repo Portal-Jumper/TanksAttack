@@ -25,7 +25,7 @@ public class level2Controller {
 
     @FXML
     private AnchorPane scene;
-    
+
     @FXML
     private Pane emptyPane;
 
@@ -43,12 +43,12 @@ public class level2Controller {
             image12, image13, image14, image15, image16, image17, image18, image19, image20, image21, image22, image23,
             image24, image25, image26, image27, image28, image29, image30, image31, image32, image33, image34, image35,
             image36, image37, image38, image39, image40, image41, image42, image43, image44, image45, image46, image47,
-            image48, image49, image50, image51, image52, image53, image54, image55, image56,image57, image58, image59,
+            image48, image49, image50, image51, image52, image53, image54, image55, image56, image57, image58, image59,
             image60, image61, image62, image63, image64, image65, image66, image67, image68, image69, image70, image71,
             image72, image73, image74, image75, image76, image77, image78, image79, image80, image81, image82, image83,
             image84, image85, image86, image87, image88, image89, image90, image91, image92, image93, image94, image95,
             image96, image97, image98, image99, image100, image101, image102, image103, image104, image105, image106,
-            image107, image108,image109, image110, image111, image112, image113, image114,image115,  metal1, metal2, metal3, 
+            image107, image108, image109, image110, image111, image112, image113, image114, image115, metal1, metal2, metal3,
             metal4, metal5, metal6;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
@@ -138,15 +138,15 @@ public class level2Controller {
             if (e.getCode() == KeyCode.L) {
                 lPressed.set(true);
             }
-            
-            if(e.getCode() == KeyCode.ESCAPE) {
-				try {
-					App.setRoot("levelSelection");
-				} catch (IOException e1) {
-					
-					e1.printStackTrace();
-				}
-			}
+
+            if (e.getCode() == KeyCode.ESCAPE) {
+                try {
+                    App.setRoot("levelSelection");
+                } catch (IOException e1) {
+
+                    e1.printStackTrace();
+                }
+            }
         });
 
         scene.setOnKeyReleased(e -> {
@@ -273,14 +273,13 @@ public class level2Controller {
         }
     };
 
-   
 
     private void checkBlockBulletCollision(ArrayList<ImageView> bullets) {
         Iterator<ImageView> it = bullets.iterator();
         while (it.hasNext()) {
             ImageView imageView = it.next();
             Iterator<ImageView> it2 = blocks.iterator();
-            while(it2.hasNext()) {
+            while (it2.hasNext()) {
                 ImageView imageView1 = it2.next();
                 if (imageView.getBoundsInParent().intersects(imageView1.getBoundsInParent())) {
                     if (!bricks.contains(imageView1) && !imageView1.getImage().equals(waterImage)) {
@@ -572,7 +571,7 @@ public class level2Controller {
 //    Random Map Generation
 
     private void generateMap() {
-    	fillEnemyTanks();
+        fillEnemyTanks();
         level1Controller.setWater(image1, image2, image3, image4, blocks, waterImage);
         level1Controller.setWater(image5, image6, image7, image8, blocks, waterImage);
         level1Controller.setWater(image9, image10, image11, image12, blocks, waterImage);
@@ -613,9 +612,9 @@ public class level2Controller {
         image113.setImage(waterImage);
         image114.setImage(waterImage);
         image115.setImage(waterImage);
-        
+
     }
-    
+
     private void fillEnemyTanks() {
         enemyTanks.add(enemyTank1);
         enemyTanks.add(enemyTank2);
@@ -624,6 +623,5 @@ public class level2Controller {
         enemyTanks.add(enemyTank5);
     }
 
- 
 
 }
